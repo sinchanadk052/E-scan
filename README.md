@@ -19,5 +19,4 @@
 - **Authentication:** LDAP + Application-based login  
 - **OCR:** EasyOCR (for document scanning)  
 
-✨ Built with ❤️ by itsjiya.zz
 
