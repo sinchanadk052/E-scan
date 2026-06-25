@@ -1,3 +1,4 @@
+require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const multer = require("multer");
@@ -10,10 +11,14 @@ app.use(express.json());
 app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 // Connect to MongoDB
-mongoose.connect("mongodb://localhost:27017/combinedDB", {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-});
+mongoose
+  .connect(process.env.MONGODB_URI)
+  .then(() => {
+    console.log(" MongoDB Connected");
+  })
+  .catch((err) => {
+    console.error(" MongoDB Connection Error:", err);
+  });
 
 // User Schema
 const userSchema = new mongoose.Schema({
@@ -132,11 +137,11 @@ app.get("/documents", async (req, res) => {
 //   try {
 //     const { id } = req.params;
 //     const document = await Document.findById(id);
-    
+
 //     if (!document) {
 //       return res.status(404).send({ success: false, message: "Document not found!" });
 //     }
-    
+
 //     res.send({ success: true, document });
 //   } catch (error) {
 //     console.error("Error fetching document:", error);
@@ -193,11 +198,11 @@ app.get("/document/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const document = await Document.findById(id);
-    
+
     if (!document) {
       return res.status(404).send({ success: false, message: "Document not found!" });
     }
-    
+
     res.send({ success: true, document });
   } catch (error) {
     console.error("Error fetching document:", error);
@@ -210,22 +215,22 @@ app.put("/update-scanned-details/:id", async (req, res) => {
   try {
     const { id } = req.params;
     const { scannedDetails } = req.body;
-    
+
     const document = await Document.findByIdAndUpdate(
-      id, 
-      { scannedDetails }, 
+      id,
+      { scannedDetails },
       { new: true }
     );
-    
+
     if (!document) {
       return res.status(404).send({ success: false, message: "Document not found!" });
     }
-    
+
     res.send({ success: true, message: "Scanned details updated successfully!", document });
   } catch (error) {
     console.error("Error updating scanned details:", error);
-    res.status(500).send({ success: false, message: "Error updating scanned details." });
-  }
+    res.status(500).send({ success: false, message: "Error updating scanned details." });
+  }
 });
 // Error handling middleware
 app.use((error, req, res, next) => {
