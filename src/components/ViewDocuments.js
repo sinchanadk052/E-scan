@@ -415,6 +415,7 @@ import axios from "axios";
 import Tesseract from "tesseract.js";
 import EditScannedData from "./EditScannedData";
 import "./styles/ViewDocuments.css";
+const API = process.env.REACT_APP_API_URL|| "http://localhost:5000";
 
 function ViewDocuments() {
   const [documents, setDocuments] = useState([]);
@@ -428,7 +429,7 @@ function ViewDocuments() {
   useEffect(() => {
     const fetchDocuments = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/documents");
+        const response = await axios.get(`${API}/documents`);
         setDocuments(response.data);
       } catch (error) {
         alert("Error fetching documents");
@@ -436,12 +437,12 @@ function ViewDocuments() {
     };
 
     fetchDocuments();
-  }, []);
+  }, [API]);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this document?")) {
       try {
-        await axios.delete(`http://localhost:5000/delete-document/${id}`);
+        await axios.delete(`${API}/delete-document/${id}`);
         alert("Document deleted successfully!");
         setDocuments(documents.filter((doc) => doc._id !== id));
       } catch (error) {
@@ -456,7 +457,7 @@ function ViewDocuments() {
       setCurrentDocId(docId);
       console.log("Scanning document with ID:", docId);
       
-      const response = await axios.get(`http://localhost:5000/${filePath}`, { responseType: "blob" });
+      const response = await axios.get(`${API}/${filePath}`, { responseType: "blob" });
       const file = new Blob([response.data]);
       const result = await Tesseract.recognize(file, "eng");
       const raw = result.data.text;
@@ -495,9 +496,9 @@ function ViewDocuments() {
       setSaving(true);
       console.log("Saving to document ID:", currentDocId);
       
-      await axios.post(`http://localhost:5000/scan-document/${currentDocId}`, {
-        scannedDetails: formattedData,
-      });
+      await axios.post(`${API}/scan-document/${currentDocId}`, {
+  scannedDetails: formattedData,
+});
       
       setSaving(false);
       alert("Formatted data saved to database successfully!");
@@ -517,7 +518,7 @@ function ViewDocuments() {
     // Refresh documents after editing
     const fetchDocuments = async () => {
       try {
-        const response = await axios.get("http://localhost:5000/documents");
+        const response = await axios.get(`${API}/documents`);
         setDocuments(response.data);
       } catch (error) {
         console.error("Error refreshing documents");
@@ -552,7 +553,7 @@ function ViewDocuments() {
               
               {/* Document Image */}
               <img
-                src={`http://localhost:5000/${doc.filePath}`}
+                src={`${API}/${doc.filePath}`}
                 alt={doc.name}
                 className="document-image"
               />

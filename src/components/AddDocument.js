@@ -61,6 +61,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import "./styles/AddDocument.css";
+const API = process.env.REACT_APP_API_URL|| "http://localhost:5000";
 
 function AddDocument() {
   const [formData, setFormData] = useState({
@@ -89,7 +90,7 @@ function AddDocument() {
     data.append("description", formData.description);
 
     try {
-      const response = await axios.post("http://localhost:5000/add-document", data);
+      const response = await axios.post(`${API}/add-document`, data);
       alert(response.data.message);
       
       // Reset form after successful submission

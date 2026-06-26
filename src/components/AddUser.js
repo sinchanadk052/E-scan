@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import './styles/AddUser.css';
+const API = process.env.REACT_APP_API_URL|| "http://localhost:5000";
 
 function AddUser() {
   const [form, setForm] = useState({ 
@@ -97,7 +98,7 @@ function AddUser() {
     try {
       // Set default password as empId
       const newUser = { ...form, password: form.empId };
-      await axios.post("http://localhost:5000/add-user", newUser);
+      await axios.post(`${API}/add-user`, newUser);
       alert("User added successfully!");
       
       // Reset form after successful submission

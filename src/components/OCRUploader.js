@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import Tesseract from "tesseract.js";
 import axios from "axios";
 
+const API = process.env.REACT_APP_API_URL|| "http://localhost:5000";
+
 function OCRUploader() {
   const [image, setImage] = useState(null);
   const [text, setText] = useState("");
@@ -11,6 +13,7 @@ function OCRUploader() {
 
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
+
     if (file) {
       setImage(file);
       performOCR(file);
@@ -18,43 +21,78 @@ function OCRUploader() {
   };
 
   const performOCR = async (file) => {
-    setLoading(true);
-    const result = await Tesseract.recognize(file, "eng");
-    const raw = result.data.text;
-    setText(raw);
-    formatText(raw);
-    setLoading(false);
+    try {
+      setLoading(true);
+
+      const result = await Tesseract.recognize(file, "eng");
+
+      const raw = result.data.text;
+
+      setText(raw);
+      formatText(raw);
+    } catch (error) {
+      console.error("OCR Error:", error);
+      alert("Error performing OCR");
+    } finally {
+      setLoading(false);
+    }
   };
 
   const formatText = (raw) => {
-    const lines = raw.split("\n").map((line) => line.trim()).filter(Boolean);
+    const lines = raw
+      .split("\n")
+      .map((line) => line.trim())
+      .filter(Boolean);
+
     const formatted = {};
+
     lines.forEach((line) => {
       const [key, ...rest] = line.split(":");
+
       if (rest.length > 0) {
         formatted[key.trim()] = rest.join(":").trim();
       }
     });
+
     setFormattedData(formatted);
   };
 
   const handleSubmit = async () => {
-    const formData = new FormData();
-    formData.append("image", image);
-    formData.append("type", type);
-    formData.append("data", JSON.stringify(formattedData));
+    try {
+      const formData = new FormData();
 
-    await axios.post("http://localhost:5000/api/documents", formData);
-    alert("Document saved!");
+      formData.append("image", image);
+      formData.append("type", type);
+      formData.append("data", JSON.stringify(formattedData));
+
+      await axios.post(`${API}/api/documents`, formData);
+
+      alert("Document saved!");
+    } catch (error) {
+      console.error("Upload Error:", error);
+      alert("Error saving document.");
+    }
   };
 
   return (
     <div style={{ padding: "20px" }}>
       <h2>Upload and Scan Document</h2>
-      <input type="file" accept="image/*" onChange={handleImageUpload} />
-      <br /><br />
+
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageUpload}
+      />
+
+      <br />
+      <br />
+
       <label>Type: </label>
-      <select value={type} onChange={(e) => setType(e.target.value)}>
+
+      <select
+        value={type}
+        onChange={(e) => setType(e.target.value)}
+      >
         <option value="marksheet">Marksheet</option>
         <option value="invoice">Invoice</option>
         <option value="resume">Resume</option>
@@ -66,19 +104,32 @@ function OCRUploader() {
       {text && (
         <>
           <h3>Extracted Text:</h3>
+
           <pre>{text}</pre>
 
           <h3>Formatted Data:</h3>
+
           {Object.entries(formattedData).map(([key, value]) => (
             <div key={key}>
               <label>{key}: </label>
+
               <input
                 value={value}
-                onChange={(e) => setFormattedData({ ...formattedData, [key]: e.target.value })}
+                onChange={(e) =>
+                  setFormattedData({
+                    ...formattedData,
+                    [key]: e.target.value,
+                  })
+                }
               />
             </div>
           ))}
-          <button onClick={handleSubmit}>Save to DB</button>
+
+          <br />
+
+          <button onClick={handleSubmit}>
+            Save to DB
+          </button>
         </>
       )}
     </div>
