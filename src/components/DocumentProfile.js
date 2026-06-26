@@ -29,7 +29,7 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import AddDocument from "./AddDocument";
 import ViewDocuments from "./ViewDocuments";
-import ScanDocument from "./OCRUploader";
+
 import OCRUploader from "./OCRUploader";
 import "./styles/DocumentProfile.css";
 

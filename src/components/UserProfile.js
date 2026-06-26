@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import AddUser from "./AddUser";
 import UpdateUser from "./UpdateUser";
 import './styles/UserProfile.css';
-import arrow from "./img/arrow.png";
+//import arrow from "./img/arrow.png";
 
 function UserProfile() {
   const [view, setView] = useState("");

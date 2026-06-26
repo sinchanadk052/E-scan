@@ -12,8 +12,9 @@ function EditScannedData({ documentId, onClose }) {
   const [newValue, setNewValue] = useState("");
 
   useEffect(() => {
-    fetchDocument();
-  }, [documentId]);
+  fetchDocument();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+}, [documentId]);
 
   const fetchDocument = async () => {
     try {

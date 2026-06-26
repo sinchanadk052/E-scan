@@ -38,7 +38,7 @@
 // //       setLoading(true);
 // //       setCurrentDocId(docId); // Store the document ID for saving later
 // //       console.log("Scanning document with ID:", docId); // Debug log
-      
+
 // //       const response = await axios.get(`http://localhost:5000/${filePath}`, { responseType: "blob" });
 // //       const file = new Blob([response.data]);
 // //       const result = await Tesseract.recognize(file, "eng");
@@ -77,11 +77,11 @@
 // //     try {
 // //       setSaving(true);
 // //       console.log("Saving to document ID:", currentDocId); // Debug log
-      
+
 // //       await axios.post(`http://localhost:5000/scan-document/${currentDocId}`, {
 // //         scannedDetails: formattedData,
 // //       });
-      
+
 // //       setSaving(false);
 // //       alert("Formatted data saved to database successfully!");
 // //     } catch (error) {
@@ -187,7 +187,7 @@
 //       setLoading(true);
 //       setCurrentDocId(docId);
 //       console.log("Scanning document with ID:", docId);
-      
+
 //       const response = await axios.get(`http://localhost:5000/${filePath}`, { responseType: "blob" });
 //       const file = new Blob([response.data]);
 //       const result = await Tesseract.recognize(file, "eng");
@@ -226,11 +226,11 @@
 //     try {
 //       setSaving(true);
 //       console.log("Saving to document ID:", currentDocId); // Debug log
-      
+
 //       await axios.post(`http://localhost:5000/scan-document/${currentDocId}`, {
 //         scannedDetails: formattedData,
 //       });
-      
+
 //       setSaving(false);
 //       alert("Formatted data saved to database successfully!");
 //     } catch (error) {
@@ -276,7 +276,7 @@
 //             <p><strong>Type:</strong> {doc.type}</p>
 //             <p><strong>Submitted by:</strong> {doc.submittedBy}</p>
 //             <p><strong>Description:</strong> {doc.description}</p>
-            
+
 //             {/* Document Image */}
 //             <img
 //               src={`http://localhost:5000/${doc.filePath}`}
@@ -289,7 +289,7 @@
 //                 objectFit: "cover"
 //               }}
 //             />
-            
+
 //             {/* Scanned Details Preview */}
 //             {doc.scannedDetails && Object.keys(doc.scannedDetails).length > 0 && (
 //               <div style={{ 
@@ -300,7 +300,7 @@
 //               }}>
 //               </div>
 //             )}
-            
+
 //             {/* Action Buttons */}
 //             <div style={{ display: "flex", gap: "10px", flexWrap: "wrap" }}>
 //               <button 
@@ -348,9 +348,9 @@
 //           </div>
 //         ))
 //       )}
-      
+
 //       {loading && <p>Scanning... please wait</p>}
-      
+
 //       {text && (
 //         <div style={{ 
 //           marginTop: "20px", 
@@ -415,7 +415,7 @@ import axios from "axios";
 import Tesseract from "tesseract.js";
 import EditScannedData from "./EditScannedData";
 import "./styles/ViewDocuments.css";
-const API = process.env.REACT_APP_API_URL|| "http://localhost:5000";
+const API = process.env.REACT_APP_API_URL || "http://localhost:5000";
 
 function ViewDocuments() {
   const [documents, setDocuments] = useState([]);
@@ -437,7 +437,7 @@ function ViewDocuments() {
     };
 
     fetchDocuments();
-  }, [API]);
+  }, []);
 
   const handleDelete = async (id) => {
     if (window.confirm("Are you sure you want to delete this document?")) {
@@ -456,7 +456,7 @@ function ViewDocuments() {
       setLoading(true);
       setCurrentDocId(docId);
       console.log("Scanning document with ID:", docId);
-      
+
       const response = await axios.get(`${API}/${filePath}`, { responseType: "blob" });
       const file = new Blob([response.data]);
       const result = await Tesseract.recognize(file, "eng");
@@ -495,11 +495,11 @@ function ViewDocuments() {
     try {
       setSaving(true);
       console.log("Saving to document ID:", currentDocId);
-      
+
       await axios.post(`${API}/scan-document/${currentDocId}`, {
-  scannedDetails: formattedData,
-});
-      
+        scannedDetails: formattedData,
+      });
+
       setSaving(false);
       alert("Formatted data saved to database successfully!");
     } catch (error) {
@@ -544,46 +544,46 @@ function ViewDocuments() {
               <div className="document-header">
                 <h4>{doc.name}</h4>
               </div>
-              
+
               <div className="document-meta">
                 <p><strong>Type:</strong> {doc.type}</p>
                 <p><strong>Submitted by:</strong> {doc.submittedBy}</p>
                 <p><strong>Description:</strong> {doc.description}</p>
               </div>
-              
+
               {/* Document Image */}
               <img
                 src={`${API}/${doc.filePath}`}
                 alt={doc.name}
                 className="document-image"
               />
-              
+
               {/* Scanned Details Preview */}
               {doc.scannedDetails && Object.keys(doc.scannedDetails).length > 0 && (
                 <div className="scanned-details-preview">
                 </div>
               )}
-              
+
               {/* Action Buttons */}
               <div className="action-buttons">
-                <button 
-                  onClick={() => handleDelete(doc._id)} 
+                <button
+                  onClick={() => handleDelete(doc._id)}
                   className="action-button delete-button"
                 >
                   Delete
                 </button>
-                <button 
+                <button
                   onClick={() => handleScan(doc.filePath, doc._id)}
                   className="action-button scan-button"
                 >
                   Scan
                 </button>
-                <button 
+                <button
                   onClick={() => handleViewEdit(doc._id)}
                   className="action-button view-edit-button"
                 >
-                  {doc.scannedDetails && Object.keys(doc.scannedDetails).length > 0 
-                    ? "View/Edit Details" 
+                  {doc.scannedDetails && Object.keys(doc.scannedDetails).length > 0
+                    ? "View/Edit Details"
                     : "Add Details"}
                 </button>
               </div>
@@ -591,7 +591,7 @@ function ViewDocuments() {
           ))}
         </div>
       )}
-      
+
       {loading && (
         <div className="loading-container">
           <div className="loading-text">
@@ -600,7 +600,7 @@ function ViewDocuments() {
           </div>
         </div>
       )}
-      
+
       {text && (
         <div className="formatted-data-section">
           <h3>Formatted Data</h3>
@@ -613,8 +613,8 @@ function ViewDocuments() {
               />
             </div>
           ))}
-          <button 
-            onClick={saveToDB} 
+          <button
+            onClick={saveToDB}
             disabled={saving}
             className="save-button"
           >
@@ -630,9 +630,9 @@ function ViewDocuments() {
 
       {/* Edit Modal */}
       {editingDocId && (
-        <EditScannedData 
-          documentId={editingDocId} 
-          onClose={handleCloseEdit} 
+        <EditScannedData
+          documentId={editingDocId}
+          onClose={handleCloseEdit}
         />
       )}
     </div>
